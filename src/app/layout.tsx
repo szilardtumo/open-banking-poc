@@ -1,9 +1,14 @@
 import "~/styles/globals.css";
 
-import { GeistSans } from "geist/font/sans";
+import { Inter as FontSans } from "next/font/google";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Open Banking POC",
@@ -15,7 +20,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={`${fontSans.variable}`}>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
