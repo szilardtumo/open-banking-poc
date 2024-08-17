@@ -75,7 +75,7 @@ const goCardlessClientMiddleware = createTRPCMiddleware(({ ctx, next }) => {
 export const goCardlessRouter = createTRPCRouter({
   getInstitutions: protectedProcedure
     .use(goCardlessClientMiddleware)
-    .input(z.object({ country: z.string() }))
+    .input(z.object({ country: z.string().optional().default("") }))
     .query(async ({ input, ctx }) => {
       const data = (await ctx.goCardlessClient.institution.getInstitutions(
         input,

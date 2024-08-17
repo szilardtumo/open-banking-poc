@@ -36,7 +36,7 @@ export function AddIntegrationCard() {
 
   const { data: institutionOptions = [] } =
     api.goCardless.getInstitutions.useQuery(
-      { country: "hu" },
+      {},
       {
         select: (data) =>
           data.map((item) => ({ label: item.name, value: item.id })),
