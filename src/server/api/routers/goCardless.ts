@@ -6,7 +6,7 @@ import {
 
 import NordigenClient from "nordigen-node";
 import { z } from "zod";
-import { env } from "~/env";
+import { getBaseUrl } from "~/lib/utils";
 
 export interface RequisitionResponse {
   id: string;
@@ -97,7 +97,7 @@ export const goCardlessRouter = createTRPCRouter({
     .mutation(async ({ input, ctx }) => {
       const data = (await ctx.goCardlessClient.requisition.createRequisition({
         institutionId: input.institutionId,
-        redirectUrl: env.VERCEL_URL,
+        redirectUrl: getBaseUrl(),
         accountSelection: false,
         redirectImmediate: false,
         reference: "",
