@@ -4,6 +4,7 @@ import { Inter as FontSans } from "next/font/google";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { HydrateClient } from "~/trpc/server";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontSans.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <HydrateClient>{children} </HydrateClient>
+        </TRPCReactProvider>
       </body>
     </html>
   );
