@@ -1,38 +1,15 @@
-"use client";
+import { api } from "~/trpc/server";
+import { Dashboard } from "./_components/Dashboard";
 
-import { useCallback } from "react";
-
-import { Button } from "~/components/ui/button";
-import { loginAction, logoutAction } from "~/server/actions/auth";
-import { api } from "~/trpc/react";
-
-export default function Home() {
-  const { data: hello } = api.hello.hello.useQuery({ text: "from tRPC" });
-  const { data: isLoggedIn, isLoading } = api.auth.getIsLoggedIn.useQuery();
-  const utils = api.useUtils();
-
-  const handleLogin = useCallback(async () => {
-    await loginAction();
-    await utils.auth.invalidate();
-  }, [utils]);
-
-  const handleLogout = useCallback(async () => {
-    await logoutAction();
-    await utils.auth.invalidate();
-  }, [utils]);
+export default async function Home() {
+  const isLoggedIn = await api.auth.getIsLoggedIn();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <p className="text-2xl text-white">
-        {hello ? hello.greeting : "Loading tRPC query..."}
-        {isLoading ? (
-          "Loading..."
-        ) : isLoggedIn ? (
-          <Button onClick={handleLogout}>Logout</Button>
-        ) : (
-          <Button onClick={handleLogin}>Login</Button>
-        )}
-      </p>
+    <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-2">
+        <h1 className="text-3xl font-semibold">Open Banking POC</h1>
+      </div>
+      {isLoggedIn && <Dashboard />}
     </main>
   );
 }

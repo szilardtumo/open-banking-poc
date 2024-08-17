@@ -5,6 +5,9 @@ import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { HydrateClient } from "~/trpc/server";
+import { Providers } from "./_components/Providers";
+import { Header } from "./_components/Header";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,9 +26,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontSans.variable}`}>
       <body>
-        <TRPCReactProvider>
-          <HydrateClient>{children} </HydrateClient>
-        </TRPCReactProvider>
+        <Providers>
+          <TRPCReactProvider>
+            <HydrateClient>
+              <div className="flex min-h-screen w-full flex-col">
+                <Toaster />
+                <Header />
+                {children}
+              </div>
+            </HydrateClient>
+          </TRPCReactProvider>
+        </Providers>
       </body>
     </html>
   );

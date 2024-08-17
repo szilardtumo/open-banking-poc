@@ -26,13 +26,19 @@ import { env } from "~/env";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await getIronSession<{ accessToken: string }>(cookies(), {
+  const sessionOptions = {
     cookieName: "session",
     password: env.SESSION_PASSWORD,
-  });
+  };
+
+  const session = await getIronSession<{ accessToken: string }>(
+    cookies(),
+    sessionOptions,
+  );
   return {
     ...opts,
     session,
+    sessionOptions,
   };
 };
 
