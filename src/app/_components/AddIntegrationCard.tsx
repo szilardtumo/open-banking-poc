@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 import { useForm } from "react-hook-form";
@@ -25,37 +26,44 @@ import {
 import { api } from "~/trpc/react";
 
 const FormSchema = z.object({
-  institution: z.string().min(1),
+  institutionId: z.string().min(1),
 });
 
 type FormFields = z.infer<typeof FormSchema>;
 
 export function AddIntegrationCard() {
+  const router = useRouter();
+
   const { data: institutionOptions = [] } =
     api.goCardless.getInstitutions.useQuery(
-      {
-        country: "hu",
-      },
+      { country: "hu" },
       {
         select: (data) =>
           data.map((item) => ({ label: item.name, value: item.id })),
       },
     );
 
+  const { mutateAsync: createRequisition } =
+    api.goCardless.createRequisition.useMutation();
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      institution: "",
+      institutionId: "",
     },
   });
 
-  const onSubmit = useCallback(async (data: FormFields) => {
-    try {
-      console.log("submit data", data);
-    } catch (err) {
-      console.log("err", err);
-    }
-  }, []);
+  const onSubmit = useCallback(
+    async (data: FormFields) => {
+      try {
+        const requisition = await createRequisition(data);
+        router.push(requisition.link);
+      } catch (err) {
+        console.log("err", err);
+      }
+    },
+    [createRequisition, router],
+  );
 
   return (
     <Card>
@@ -72,7 +80,7 @@ export function AddIntegrationCard() {
           >
             <FormField
               control={form.control}
-              name="institution"
+              name="institutionId"
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Institution</FormLabel>

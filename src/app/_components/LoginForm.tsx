@@ -53,7 +53,7 @@ export function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, onValidationError)}
-        className="flex w-full justify-end gap-3"
+        className="flex gap-3"
       >
         <FormField
           control={form.control}
